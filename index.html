@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>今日英镑汇率</title>
+</head>
+<body>
+    <h1>今日英镑兑人民币汇率</h1>
+    <p>买入价: <span id="buyRate">加载中...</span></p>
+    <p>卖出价: <span id="sellRate">加载中...</span></p>
+
+    <script>
+        // API URL，基准币种为 GBP
+        const apiUrl = "https://v6.exchangerate-api.com/v6/226c564a26b4b93ff0ccb442/latest/GBP";
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                // 获取 GBP -> CNY 汇率
+                const rate = data.conversion_rates.CNY;
+
+                // 显示在网页上
+                document.getElementById("buyRate").textContent = rate.toFixed(2);
+                document.getElementById("sellRate").textContent = (rate * 1.01).toFixed(2); // 简单假设卖出价比买入价高1%
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById("buyRate").textContent = "获取失败";
+                document.getElementById("sellRate").textContent = "获取失败";
+            });
+    </script>
+</body>
+</html>
