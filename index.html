@@ -16,35 +16,60 @@
 
         .card {
             background-color: #ffffff;
-            padding: 30px 50px;
+            padding: 30px 20px;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
+            display: flex;
+            justify-content: space-between;
+            max-width: 900px;
             width: 100%;
         }
 
-        h1 {
-            font-size: 28px;
+        .column {
+            background-color: #f2f6ff;
+            flex: 1;
+            margin: 0 10px;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .column h2 {
+            font-size: 20px;
             color: #333;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
 
         .rate {
-            font-size: 24px;
-            margin: 15px 0;
-            padding: 15px;
-            border-radius: 10px;
+            font-size: 26px;
+            font-weight: bold;
             color: #333;
-            background-color: #f2f6ff;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column;
+            }
+            .column {
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
 <body>
     <div class="card">
-        <h1>英镑兑人民币实时汇率</h1>
-        <div class="rate" id="buyRate">加载中...</div>
-        <div class="rate" id="sellRate">加载中...</div>
+        <div class="column">
+            <h2>实时汇率</h2>
+            <div class="rate" id="midRate">加载中...</div>
+        </div>
+        <div class="column">
+            <h2>预估买入价</h2>
+            <div class="rate" id="buyRate">加载中...</div>
+        </div>
+        <div class="column">
+            <h2>预估卖出价</h2>
+            <div class="rate" id="sellRate">加载中...</div>
+        </div>
     </div>
 
     <script>
@@ -62,11 +87,13 @@
                 const buyRate = (midRate - avgBuyDiff).toFixed(3);
                 const sellRate = (midRate + avgSellDiff).toFixed(3);
 
-                document.getElementById("buyRate").textContent = "买入价: " + buyRate;
-                document.getElementById("sellRate").textContent = "卖出价: " + sellRate;
+                document.getElementById("midRate").textContent = midRate.toFixed(3);
+                document.getElementById("buyRate").textContent = buyRate;
+                document.getElementById("sellRate").textContent = sellRate;
             })
             .catch(err => {
                 console.error(err);
+                document.getElementById("midRate").textContent = "获取失败";
                 document.getElementById("buyRate").textContent = "获取失败";
                 document.getElementById("sellRate").textContent = "获取失败";
             });
