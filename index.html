@@ -2,10 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>今日英镑汇率</title>
+    <title>实时汇率</title>
 </head>
 <body>
-    <h1>今日英镑兑人民币汇率</h1>
+    <h1>英镑兑人民币实时汇率</h1>
     <p>买入价: <span id="buyRate">加载中...</span></p>
     <p>卖出价: <span id="sellRate">加载中...</span></p>
 
@@ -13,15 +13,23 @@
         // API URL，基准币种为 GBP
         const apiUrl = "https://v6.exchangerate-api.com/v6/226c564a26b4b93ff0ccb442/latest/GBP";
 
+        // 根据历史数据计算的平均差值（CNY）
+        const avgBuyDiff = 0.66;   // 买入价比中间价低
+        const avgSellDiff = 7.76;  // 卖出价比中间价高
+
         fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
-                // 获取 GBP -> CNY 汇率
-                const rate = data.conversion_rates.CNY;
+                // API 返回市场中间价
+                const midRate = data.conversion_rates.CNY;
+
+                // 按差值计算买入/卖出价
+                const buyRate = (midRate - avgBuyDiff).toFixed(2);
+                const sellRate = (midRate + avgSellDiff).toFixed(2);
 
                 // 显示在网页上
-                document.getElementById("buyRate").textContent = rate.toFixed(2);
-                document.getElementById("sellRate").textContent = (rate * 1.01).toFixed(2); // 简单假设卖出价比买入价高1%
+                document.getElementById("buyRate").textContent = buyRate;
+                document.getElementById("sellRate").textContent = sellRate;
             })
             .catch(err => {
                 console.error(err);
