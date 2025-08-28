@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>大概汇率</title>
+    <title>实时汇率</title>
     <style>
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -35,41 +35,32 @@
             margin: 15px 0;
             padding: 15px;
             border-radius: 10px;
-            color: #fff;
-        }
-
-        .buy {
-            background-color: #4caf50; /* 绿色 */
-        }
-
-        .sell {
-            background-color: #f44336; /* 红色 */
-        }
-
-        .loading {
-            color: #999;
+            color: #333;
+            background-color: #f2f6ff;
         }
     </style>
 </head>
 <body>
     <div class="card">
         <h1>英镑兑人民币实时汇率</h1>
-        <div class="rate buy" id="buyRate">加载中...</div>
-        <div class="rate sell" id="sellRate">加载中...</div>
+        <div class="rate" id="buyRate">加载中...</div>
+        <div class="rate" id="sellRate">加载中...</div>
     </div>
 
     <script>
         const apiUrl = "https://v6.exchangerate-api.com/v6/226c564a26b4b93ff0ccb442/latest/GBP";
-        const avgBuyDiff = 0.66;   // 买入价比中间价低
-        const avgSellDiff = 7.76;  // 卖出价比中间价高
+
+        // 每 1 GBP 的差值
+        const avgBuyDiff = 0.0083;   // 买入价比中间价低
+        const avgSellDiff = 0.063;   // 卖出价比中间价高
 
         fetch(apiUrl)
             .then(res => res.json())
             .then(data => {
                 const midRate = data.conversion_rates.CNY;
 
-                const buyRate = (midRate - avgBuyDiff).toFixed(2);
-                const sellRate = (midRate + avgSellDiff).toFixed(2);
+                const buyRate = (midRate - avgBuyDiff).toFixed(3);
+                const sellRate = (midRate + avgSellDiff).toFixed(3);
 
                 document.getElementById("buyRate").textContent = "买入价: " + buyRate;
                 document.getElementById("sellRate").textContent = "卖出价: " + sellRate;
